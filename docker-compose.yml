@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  go_app:
+    container_name: GO_APP
+    build: .
+    env_file:
+      - ./.env
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/usr/src/app
+    command: go run app/main.go
+    networks:
+      - app_net
+
+  db:
+    container_name: GO_APP_DB
+    image: postgres:13-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_PORT: ${DATABASE_PORT}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - ${DATABASE_EXPOSE_PORT:-54311}:${DATABASE_PORT:-5432}
+    volumes:
+      - ./.docker/postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge
