@@ -7,7 +7,6 @@ A CLI chat bot app using go for update daily check-in status and show reports.
 cd {directory}
 // Setup .env file
 cp .env.example .env
-cd {directory}
 // Build docker containers
 docker compose up
 // Go inside docker conainer and run migrations
